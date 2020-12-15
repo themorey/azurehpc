@@ -27,6 +27,10 @@ if [ -f "/etc/systemd/system/temp-disk-swapfile.service" ]; then
     systemctl stop temp-disk-swapfile.service
 fi
 
-if [ -d /mnt/resource ]; then
+# Fix corner case on nodes that have no local disk but still have the /mnt/resource directory
+if grep -q "/mnt/resource" /etc/fstab ]; then
     umount /mnt/resource
+    echo "/mnt/resource has been unmounted"
+else
+    echo "/mnt/resource does not exist"
 fi
